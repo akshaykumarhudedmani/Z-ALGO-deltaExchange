@@ -105,11 +105,10 @@ st.divider()
 # --- SECTION 2: EQUITY CURVE & PERFORMANCE METRICS ---
 st.header("2. Zovereign Historical Performance")
 
-col_a, col_b, col_c, col_d = st.columns(4)
+col_a, col_b, col_c = st.columns(3)
 col_a.metric("Total Trades Executed", f"{total_trades}")
 col_b.metric("Strategy Win Rate", f"{win_rate:.2f}%")
-col_c.metric("Historical Net Profit", f"{net_pnl:.2f}", delta=f"{net_pnl:.2f} Growth") # Removed Units
-col_d.metric("Absolute Max Drawdown", f"{max_dd:.2f}", delta="Risk Tolerance Check", delta_color="inverse") # Removed Units
+col_c.metric("Historical Net Profit", f"{net_pnl:.2f}", delta=f"{net_pnl:.2f} Growth")
 
 if not df_full.empty:
     st.subheader("Equity Curve & Drawdown Visualizer")

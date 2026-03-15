@@ -152,6 +152,3 @@ def generate_report(trades, start_balance):
 
 if __name__ == "__main__":
     run_backtest()
-
-else:
-    print("the tra")
