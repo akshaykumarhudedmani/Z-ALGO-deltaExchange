@@ -148,7 +148,7 @@ def generate_report(trades, start_balance):
     print(f"Final Balance      : ${start_balance + net_pnl:.2f}")
     print(f"Total Growth       : {(net_pnl/start_balance)*100:.2f}%")
     print("="*45)
-    df_results.to_csv("scale_out_results.csv", index=False)
+    df_results.to_csv("strategy_results.csv", index=False)
 
 if __name__ == "__main__":
     run_backtest()

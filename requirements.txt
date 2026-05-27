@@ -1,0 +1,11 @@
+streamlit
+pandas
+pandas_ta
+delta_rest_client
+python-dotenv
+google-generativeai
+plotly
+requests
+feedparser
+gtts
+deep-translator
