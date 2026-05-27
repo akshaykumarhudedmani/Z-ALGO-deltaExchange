@@ -7,8 +7,12 @@ def run_backtest():
     try:
         df = pd.read_csv("btc_1yr_15m.csv")
     except FileNotFoundError:
-        print("❌ ERROR: 'btc_1yr_15m.csv' not found.")
-        return
+        print("⚠️ 'btc_1yr_15m.csv' not found. Falling back to 'sample_data.csv'...")
+        try:
+            df = pd.read_csv("sample_data.csv")
+        except FileNotFoundError:
+            print("❌ ERROR: 'sample_data.csv' not found either.")
+            return
         
     df.columns = [col.strip().lower() for col in df.columns]
     df['time'] = pd.to_datetime(df['time'])

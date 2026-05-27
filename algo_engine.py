@@ -40,6 +40,8 @@ def fetch_candles(symbol="BTCUSD", resolution="15m", limit=250):
 def get_4h_bias():
     df_4h = fetch_candles(resolution="4h", limit=201)
     if df_4h is None: return "NEUTRAL"
+    
+    # Calculate 200 EMA on the 4-hour chart to determine macro trend direction
     df_4h.ta.ema(length=200, append=True)
     latest = df_4h.iloc[-1]
     return "BULL" if latest['close'] > latest['EMA_200'] else "BEAR"
@@ -70,11 +72,18 @@ def check_strategy_signal():
     latest = df.iloc[-1]
     prev = df.iloc[-2]
     
+    # Trading Strategy:
+    # 1. Check macro trend (4H 200 EMA)
+    # 2. On 15m chart, wait for 9 EMA to cross over 20 EMA
+    # 3. Confirm with RSI to avoid false breakouts
+    
     if bias == "BULL":
+        # Buy Signal: 9 EMA crosses above 20 EMA, RSI > 55
         if (prev['ema_9'] <= prev['ema_20']) and (latest['ema_9'] > latest['ema_20']) and (latest['rsi'] > 55):
             return "BUY", latest['close'], latest['atr'], df
             
     elif bias == "BEAR":
+        # Sell Signal: 9 EMA crosses below 20 EMA, RSI < 45
         if (prev['ema_9'] >= prev['ema_20']) and (latest['ema_9'] < latest['ema_20']) and (latest['rsi'] < 45):
             return "SELL", latest['close'], latest['atr'], df
 
@@ -120,5 +129,7 @@ def execute_trade(signal, price, atr):
         tp_log = " | ".join(tp_messages)
         return f"{signal} Executed! SL: {sl_price}\nTargets: {tp_log}\nCount: {trade_count}/4"
         
+    except requests.exceptions.RequestException as e:
+        return f"Network/API Error: Could not reach Delta Exchange. {e}"
     except Exception as e:
         return f"Execution Error: {e}"

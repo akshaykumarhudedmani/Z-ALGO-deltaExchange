@@ -1,24 +1,25 @@
-# TokenIQ Sentinel AI (Zovereign Algorithm)
+# TokenIQ Sentinel
 
-A state-of-the-art algorithmic trading terminal built with Streamlit, leveraging the Delta Exchange API for live trading, coupled with AI-driven analytics powered by Google Gemini 1.5.
+A python-based algorithmic trading terminal built with Streamlit, leveraging the Delta Exchange API for live trading and Google Gemini 1.5 for risk analytics.
 
 ## ⚠️ Disclaimer
-**The application and strategy are just demos of a connected Delta Exchange API testnet/demo account. They are not real, and are still for research purposes. Use at your own risk!**
+**The application and strategy are currently configured as a demo connecting to a Delta Exchange testnet/demo account. Do not use for real money trading without thorough testing and understanding of the code!**
 
 ## 🚀 Features
 
-- **Live Market Scanner:** Monitors BTC/USD on multiple timeframes (15m, 4h).
-- **Zovereign Algorithm:** Uses EMA crossovers, RSI, and ATR for trend-following and dynamic scale-out strategies.
-- **Virtual Portfolio Dashboard:** Monitor your Delta Exchange portfolio in real-time, visualizing equity curves and maximum drawdowns.
-- **AI Chief Risk Officer:** Powered by Gemini 1.5, evaluates your trading performance and provides real-time risk management insights.
-- **AI News Radio:** Fetches global crypto headlines, summarizes sentiment with Gemini, and broadcasts via audio in multiple languages (English, Hindi, Kannada).
+- **Live Market Scanner:** Monitors BTC/USD on 15m and 4h timeframes using real-time API data.
+- **Zovereign Algorithm:** A trend-following strategy using 9/20 EMA crossovers, RSI confirmation, and ATR-based dynamic scale-out taking profits in multiple chunks (16 contracts -> 8, 4, 2, 1, 1).
+- **Virtual Portfolio Dashboard:** Visualizes equity curves, maximum drawdowns, and live execution logs.
+- **AI Risk Officer:** Uses Google Gemini 1.5 to analyze your backtest metrics and provide concise risk management advice.
+- **Crypto Radio:** Fetches recent crypto headlines and broadcasts an AI-generated sentiment summary via audio (English, Hindi, Kannada).
 
 ## 📂 Project Structure
-- `app.py`: Main entry gate for the Streamlit dashboard.
-- `algo_engine.py`: Core trading logic, API connectivity, and indicator calculations.
-- `backtester.py`: Offline backtesting module to simulate the Zovereign strategy over historical data.
+- `app.py`: Main entry point for the Streamlit dashboard.
+- `algo_engine.py`: Core trading logic, Delta Exchange API connectivity, and technical indicators.
+- `backtester.py`: Offline backtesting module to simulate the strategy over historical data.
 - `risk_management.py`: Position sizing and risk scaling utilities.
-- `pages/`: Additional dashboard modules (Settings, AI News Radio, Research).
+- `pages/`: Dashboard modules (Settings, News Radio, Research).
+- `sample_data.csv`: A small mock dataset for testing the backtester out-of-the-box.
 
 ## 🛠️ Setup & Installation
 
@@ -28,7 +29,7 @@ A state-of-the-art algorithmic trading terminal built with Streamlit, leveraging
    ```
 
 2. **Configure Environment Variables:**
-   Create a `.env` file in the root directory with the following keys:
+   Create a `.env` file in the root directory with the following API keys:
    ```env
    DELTA_API_KEY=your_delta_exchange_api_key
    DELTA_API_SECRET=your_delta_exchange_api_secret
@@ -40,17 +41,21 @@ A state-of-the-art algorithmic trading terminal built with Streamlit, leveraging
    streamlit run app.py
    ```
 
-## 📊 Backtesting
-To generate a historical performance report (requires historical CSV data like `btc_1yr_15m.csv` in the root folder):
+## 📊 Backtesting & Custom Data
+To generate a historical performance report:
 ```bash
 python backtester.py
 ```
-This will produce a `strategy_results.csv` which the dashboard uses to display the equity curve.
+This produces a `strategy_results.csv` which the dashboard reads to display the equity curve.
 
-## 🧠 Technologies Used
-- **Streamlit**: Web interface and dashboard.
-- **Pandas & Pandas-TA**: Data manipulation and technical indicators.
-- **Delta Exchange REST Client**: Real-time order execution.
-- **Google Generative AI (Gemini)**: AI risk analysis and market sentiment generation.
-- **gTTS & Deep-Translator**: Real-time translated audio broadcasts.
-- **Plotly**: Advanced charting and data visualization.
+**Using Your Own Data:** 
+By default, the backtester will look for a 1-year dataset named `btc_1yr_15m.csv`. If it is not found, it will automatically fallback to the included `sample_data.csv` so you can verify the code works.
+
+To get full 1-year historical data for serious backtesting:
+1. We recommend using **QuantDataManager** or downloading historical OHLCV data from Binance/Delta.
+2. You will need two CSV files (15-minute timeframe and 4-hour timeframe).
+3. Ensure the CSVs have columns named: `time`, `open`, `high`, `low`, `close`.
+4. Place `btc_1yr_15m.csv` in the root folder, and the backtester will automatically use it instead of the sample data.
+
+## 📜 License
+This project is licensed under the MIT License - see the LICENSE file for details.
